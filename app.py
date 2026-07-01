@@ -7,6 +7,7 @@ from routes.categories import categories_bp
 from routes.transactions import transactions_bp
 from routes.budgets import budgets_bp
 from routes.dashboard import dashboard_bp
+from routes.profile import profile_bp
 
 def create_app():
     app = Flask(__name__)
@@ -30,6 +31,7 @@ def create_app():
         app.register_blueprint(transactions_bp)
         app.register_blueprint(budgets_bp)
         app.register_blueprint(dashboard_bp)
+        app.register_blueprint(profile_bp)
 
     @app.get("/api/health")
     def health():
