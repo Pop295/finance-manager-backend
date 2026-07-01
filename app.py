@@ -1,0 +1,32 @@
+from flask import Flask
+from flask_cors import CORS
+from config import Config
+from models import db
+
+def create_app():
+    app = Flask(__name__)
+    
+    # učitaj konfiguraciju iz config.py
+    app.config.from_object(Config)
+    
+    # dozvoli zahteve sa frontenda
+    CORS(app, resources={r"/api/*": {"origins": [
+        Config.FRONTEND_URL,
+        "http://localhost:5173"
+    ]}})
+    
+    # poveži db sa aplikacijom
+    db.init_app(app)
+    
+    with app.app_context():
+        db.create_all()  # kreira tabele u bazi ako ne postoje
+    
+    @app.get("/api/health")
+    def health():
+        return {"status": "ok", "message": "FinFlow backend radi!"}
+    
+    return app
+
+if __name__ == "__main__":
+    app = create_app()
+    app.run(debug=True, port=5000)
