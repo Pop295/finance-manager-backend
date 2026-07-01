@@ -38,6 +38,7 @@ class Transaction(db.Model):
     description = db.Column(db.String(255), nullable=True)
     date        = db.Column(db.Date, nullable=False, default=datetime.utcnow)
     created_at  = db.Column(db.DateTime, default=datetime.utcnow)
+    category = db.relationship("Category", foreign_keys=[category_id])
 
 
 class Budget(db.Model):

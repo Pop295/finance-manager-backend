@@ -14,13 +14,15 @@ def list_transactions(current_user):
         .order_by(Transaction.date.desc()).all()
     
     return jsonify([{
-        "id":          t.id,
-        "type":        t.type,
-        "amount":      float(t.amount),
-        "description": t.description,
-        "date":        t.date.isoformat() if t.date else None,
-        "category_id": t.category_id,
-    } for t in transactions])
+    "id":          t.id,
+    "type":        t.type,
+    "amount":      float(t.amount),
+    "description": t.description,
+    "title":       t.description,
+    "date":        t.date.isoformat() if t.date else None,
+    "category_id": t.category_id,
+    "category":    t.category.name if t.category else None,
+} for t in transactions])
 
 
 @transactions_bp.post("")
