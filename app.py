@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from config import Config
 from models import db
+from routes.auth import auth_bp
 
 def create_app():
     app = Flask(__name__)
@@ -20,6 +21,7 @@ def create_app():
     
     with app.app_context():
         db.create_all()  # kreira tabele u bazi ako ne postoje
+        app.register_blueprint(auth_bp)
     
     @app.get("/api/health")
     def health():
