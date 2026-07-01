@@ -24,7 +24,7 @@ def list_budgets(current_user):
     for b in budgets:
         if b.category_id is None:
             # ukupni mesecni budzet
-            monthly = {"id": b.id, "amount": float(b.amount), "month": b.month}
+            monthly = float(b.amount)
         else:
             # budzet po kategoriji - dodajemo i koliko je potroseno
             spent = db.session.query(func.sum(Transaction.amount)).filter(
@@ -35,12 +35,12 @@ def list_budgets(current_user):
             ).scalar() or 0
 
             items.append({
-                "id":          b.id,
-                "category_id": b.category_id,
-                "amount":      float(b.amount),
-                "spent":       float(spent),
-                "month":       b.month,
-            })
+     "id":       b.id,
+    "category": b.category.name if b.category else None,
+    "amount":   float(b.amount),
+    "spent":    float(spent),
+    "month":    b.month,
+})
 
     return jsonify({"monthly": monthly, "items": items})
 

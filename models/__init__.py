@@ -48,4 +48,6 @@ class Budget(db.Model):
     user_id     = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
     amount      = db.Column(db.Numeric(12, 2), nullable=False)
-    month       = db.Column(db.String(7), nullable=False)  # format: "2026-06"
+    month       = db.Column(db.String(7), nullable=False)
+
+    category = db.relationship("Category", foreign_keys=[category_id])
