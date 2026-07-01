@@ -4,6 +4,7 @@ from config import Config
 from models import db
 from routes.auth import auth_bp
 from routes.categories import categories_bp
+from routes.transactions import transactions_bp
 
 def create_app():
     app = Flask(__name__)
@@ -24,6 +25,7 @@ def create_app():
         db.create_all()  # kreira tabele u bazi ako ne postoje
         app.register_blueprint(auth_bp)
         app.register_blueprint(categories_bp)
+        app.register_blueprint(transactions_bp)
     
     @app.get("/api/health")
     def health():
