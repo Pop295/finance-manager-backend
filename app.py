@@ -19,7 +19,7 @@ def create_app():
     CORS(app, resources={r"/api/*": {"origins": [
     Config.FRONTEND_URL,
     "http://localhost:5173"
-], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
+    ], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"], "allow_headers": ["Content-Type", "Authorization"]}})
     
     # poveži db sa aplikacijom
     db.init_app(app)

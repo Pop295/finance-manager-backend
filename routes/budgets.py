@@ -87,7 +87,8 @@ def update_monthly(current_user):
     amount = data.get("amount")
 
     if not amount:
-        return jsonify({"error": "Iznos je obavezan"}), 400
+        if not amount:
+            return jsonify({"error": "Iznos je obavezan"}), 400
 
     budget = Budget.query.filter_by(
         user_id=current_user.id, category_id=None, month=month
