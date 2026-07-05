@@ -57,13 +57,15 @@ def create_transaction(current_user):
     db.session.commit()
 
     return jsonify({
-        "id":          transaction.id,
-        "type":        transaction.type,
-        "amount":      float(transaction.amount),
-        "description": transaction.description,
-        "date":        transaction.date.isoformat(),
-        "category_id": transaction.category_id,
-    }), 201
+    "id":          transaction.id,
+    "type":        transaction.type,
+    "amount":      float(transaction.amount),
+    "description": transaction.description,
+    "title":       transaction.description,
+    "date":        transaction.date.isoformat(),
+    "category_id": transaction.category_id,
+    "category":    transaction.category.name if transaction.category else None,
+}), 201
 
 
 @transactions_bp.put("/<int:tx_id>")
@@ -88,13 +90,15 @@ def update_transaction(current_user, tx_id):
 
     db.session.commit()
     return jsonify({
-        "id":          transaction.id,
-        "type":        transaction.type,
-        "amount":      float(transaction.amount),
-        "description": transaction.description,
-        "date":        transaction.date.isoformat(),
-        "category_id": transaction.category_id,
-    })
+    "id":          transaction.id,
+    "type":        transaction.type,
+    "amount":      float(transaction.amount),
+    "description": transaction.description,
+    "title":       transaction.description,
+    "date":        transaction.date.isoformat(),
+    "category_id": transaction.category_id,
+    "category":    transaction.category.name if transaction.category else None,
+})
 
 
 @transactions_bp.delete("/<int:tx_id>")
