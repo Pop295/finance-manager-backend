@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import db, Category
 from services.auth import token_required
+from models import db, Category, Transaction
 
 categories_bp = Blueprint("categories", __name__, url_prefix="/api/categories")
 
@@ -60,7 +61,13 @@ def update_category(current_user, cat_id):
 @categories_bp.delete("/<int:cat_id>")
 @token_required
 def delete_category(current_user, cat_id):
+    from models import Budget
     category = Category.query.filter_by(id=cat_id, user_id=current_user.id).first_or_404()
+    
+    # prvo brisemo vezane budgete i transakcije
+    Budget.query.filter_by(category_id=cat_id).delete()
+    Transaction.query.filter_by(category_id=cat_id).update({"category_id": None})
+    
     db.session.delete(category)
     db.session.commit()
     return jsonify({"message": "Kategorija obrisana"})

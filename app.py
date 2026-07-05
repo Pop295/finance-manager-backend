@@ -17,9 +17,9 @@ def create_app():
     
     # dozvoli zahteve sa frontenda
     CORS(app, resources={r"/api/*": {"origins": [
-        Config.FRONTEND_URL,
-        "http://localhost:5173"
-    ]}})
+    Config.FRONTEND_URL,
+    "http://localhost:5173"
+], "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
     
     # poveži db sa aplikacijom
     db.init_app(app)

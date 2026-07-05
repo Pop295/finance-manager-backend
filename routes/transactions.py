@@ -50,7 +50,7 @@ def create_transaction(current_user):
         type=tx_type,
         amount=float(amount),
         description=data.get("description", ""),
-        category_id=data.get("category_id"),
+        category_id=data.get("category_id") or data.get("categoryId"),
         date=date,
     )
     db.session.add(transaction)
@@ -78,8 +78,8 @@ def update_transaction(current_user, tx_id):
         transaction.amount = float(data["amount"])
     if "description" in data:
         transaction.description = data["description"]
-    if "category_id" in data:
-        transaction.category_id = data["category_id"]
+    if "category_id" in data or "categoryId" in data:
+        transaction.category_id = data.get("category_id") or data.get("categoryId")
     if "date" in data:
         try:
             transaction.date = datetime.strptime(data["date"], "%Y-%m-%d").date()
