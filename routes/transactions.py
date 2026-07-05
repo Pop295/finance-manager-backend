@@ -50,7 +50,7 @@ def create_transaction(current_user):
         type=tx_type,
         amount=float(amount),
         description=data.get("description", ""),
-        category_id=data.get("category_id") or data.get("categoryId"),
+        category_id=data.get("category_id") or (data.get("categoryId") if data.get("categoryId") else None),
         date=date,
     )
     db.session.add(transaction)
