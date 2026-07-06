@@ -43,13 +43,15 @@ def update_profile(current_user):
 @profile_bp.put("/password")
 @token_required
 def change_password(current_user):
-    data         = request.get_json() or {}
-    old_password = data.get("old_password", "")
-    new_password = data.get("new_password", "")
+    data = request.get_json() or {}
+    old_password = data.get("old_password") or data.get("current", "")
+    new_password = data.get("new_password") or data.get("next", "")
 
-    # proveravamo da li je stara lozinka ispravna
     if not check_password(old_password, current_user.password):
         return jsonify({"error": "Stara lozinka nije ispravna"}), 400
+
+    if check_password(new_password, current_user.password):
+        return jsonify({"error": "Nova lozinka mora biti drugačija od stare"}), 400
 
     if len(new_password) < 6:
         return jsonify({"error": "Nova lozinka mora imati najmanje 6 karaktera"}), 400
