@@ -171,3 +171,42 @@ def delete_budget(current_user, budget_id):
     db.session.delete(budget)
     db.session.commit()
     return jsonify({"message": "Budžet obrisan"})
+
+@budgets_bp.put("/monthly/adjust")
+@token_required
+def adjust_monthly(current_user):
+    """
+    Dodaje ili oduzima sumu od ukupnog mesečnog budžeta (umesto overwrite-a).
+
+    Prima: { amount, month? }
+    - amount pozitivan → dodaje se na budžet
+    - amount negativan → oduzima se od budžeta
+    Vraća: { id, amount, month }
+    """
+    data  = request.get_json() or {}
+    month = data.get("month", current_month())
+    delta = data.get("amount")
+
+    if delta is None:
+        return jsonify({"error": "Iznos je obavezan"}), 400
+
+    try:
+        delta = float(delta)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Iznos mora biti broj"}), 400
+
+    budget = Budget.query.filter_by(user_id=current_user.id, category_id=None, month=month).first()
+    current_amount = float(budget.amount) if budget else 0.0
+    new_amount = current_amount + delta
+
+    if new_amount < 0:
+        return jsonify({"error": "Budžet ne može biti negativan"}), 400
+
+    if budget:
+        budget.amount = new_amount
+    else:
+        budget = Budget(user_id=current_user.id, category_id=None, amount=new_amount, month=month)
+        db.session.add(budget)
+
+    db.session.commit()
+    return jsonify({"id": budget.id, "amount": float(budget.amount), "month": budget.month})
