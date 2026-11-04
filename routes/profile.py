@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import db
 from services.auth import token_required, hash_password, check_password
+from models import db, User
 
 profile_bp = Blueprint("profile", __name__, url_prefix="/api/profile")
 
@@ -25,6 +26,14 @@ def update_profile(current_user):
 
     if "name" in data:
         current_user.name = data["name"].strip()
+    if "email" in data:
+        email = data["email"].strip().lower()
+        if not email or "@" not in email:
+            return jsonify({"error": "Email nije ispravan"}), 400
+        taken = User.query.filter(User.email == email, User.id != current_user.id).first()
+        if taken:
+            return jsonify({"error": "Email već postoji"}), 409
+        current_user.email = email
     if "avatar" in data:
         current_user.avatar = data["avatar"]
     if "currency" in data:
