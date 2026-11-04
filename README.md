@@ -30,6 +30,7 @@ config.py       Konfiguracija (učitava vrednosti iz .env)
 models/         SQLAlchemy modeli (User, Category, Transaction, Budget)
 routes/         API rute (auth, transactions, categories, budgets, dashboard, profile)
 services/       Pomoćne funkcije (hash lozinke, JWT, token_required)
+uploads/        Otpremljene slike profila (pravi se automatski, nije u Git-u)
 ```
 
 ## Baza podataka
@@ -99,6 +100,7 @@ Sve rute osim registracije, prijave i health check-a zahtevaju header `Authoriza
 | `/api/reports` | GET | Mesečni izveštaji |
 | `/api/profile` | GET, PUT | Pregled i izmena profila |
 | `/api/profile/password` | PUT | Promena lozinke |
+| `/api/profile/avatar` | POST | Upload slike profila (PNG, JPG, GIF, WEBP, do 2 MB) |
 | `/api/health` | GET | Provera da server radi |
 
 ## Autori
