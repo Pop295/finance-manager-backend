@@ -34,8 +34,6 @@ def update_profile(current_user):
         if taken:
             return jsonify({"error": "Email već postoji"}), 409
         current_user.email = email
-    if "avatar" in data:
-        current_user.avatar = data["avatar"]
     if "currency" in data:
         current_user.currency = data["currency"]
 
