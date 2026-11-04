@@ -46,7 +46,7 @@ def register():
     token = create_token(user.id)
     return jsonify({
         "token": token,
-        "user": {"id": user.id, "name": user.name, "email": user.email}
+        "user": {"id": user.id, "name": user.name, "email": user.email, "avatar": user.avatar}
     }), 201
 
 
@@ -81,5 +81,5 @@ def login():
     token = create_token(user.id)
     return jsonify({
         "token": token,
-        "user": {"id": user.id, "name": user.name, "email": user.email}
+        "user": {"id": user.id, "name": user.name, "email": user.email, "avatar": user.avatar}
     }), 200

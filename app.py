@@ -1,6 +1,6 @@
 # Glavni fajl Flask aplikacije - ovde se sve spaja zajedno
-
-from flask import Flask
+import os
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from config import Config
 from models import db
@@ -20,6 +20,8 @@ def create_app():
     
     # Učitavanje konfiguracije iz config.py (baza, JWT ključ...)
     app.config.from_object(Config)
+    # Maksimalna velicina zahteva (upload avatara) - 2 MB
+    app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
     
     # CORS - dozvoljava frontendu da šalje zahteve backendu
     # Bez ovoga browser bi blokirao sve zahteve sa localhost:5173 ka localhost:5000
@@ -43,6 +45,16 @@ def create_app():
     app.register_blueprint(budgets_bp)        # /api/budgets/*
     app.register_blueprint(dashboard_bp)      # /api/dashboard, /api/reports, /api/dashboard/alerts
     app.register_blueprint(profile_bp)        # /api/profile/*
+
+    # Posluzuje otpremljene slike (avatare) iz foldera uploads/
+    @app.get("/uploads/<path:filename>")
+    def uploaded_file(filename):
+        return send_from_directory(os.path.join(app.root_path, "uploads"), filename)
+
+    # Prevelik fajl -> jasna poruka umesto HTML greske
+    @app.errorhandler(413)
+    def too_large(_e):
+        return jsonify({"error": "Slika je prevelika (maksimum 2 MB)"}), 413
 
     # Health check ruta - za proveru da li server radi
     @app.get("/api/health")
